@@ -24,10 +24,11 @@ class Reader {
 		}
 
 		start(filePath){
+			console.log(filePath);
 			if(this.cacheCheck(filePath)){
 				return this.cache[filePath];
 			}else{
-				var data = fs.readFileSync(__dirname + filePath,'binary');
+				var data = fs.readFileSync(__dirname + filePath);
 				this.cache[filePath] = data;
 				return data;
 			}

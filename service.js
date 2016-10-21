@@ -4,8 +4,16 @@ var rw = require('./read-write');
 var writer = new rw.Writer();
 var reader = new rw.Reader();
 var pathRegExp = /^(\d)*$/;
+var fileRegExps = { 
+	"text/javascript" : /(js)$/,
+	"text/html" : /(html)$/,
+	'text/plain' : /((vmd)|(spa)|(sph))$/,
+	'image/bmp' : /(bmp)$/,
+	'image/png' : /(png)$/
+	 };
 
 var server = http.createServer(function(req,res,err){
+		console.log(req.url);
 		var slashSplitedUrl = req.url.split('/');
 		if(pathRegExp.exec(slashSplitedUrl[1])){
 			writer.start();
@@ -17,19 +25,26 @@ var server = http.createServer(function(req,res,err){
 			});
 		}else{
 				var filetype = req.url.split('.');
+				var filetypeLength = filetype.length;
 				var body;
+				var resData = {};
+				for (var key in fileRegExps){
+					if(fileRegExps[key].exec(filetype[filetypeLength-1])){
+						resData['Content-Type'] = key
+						break;
+					}
+				}
 				try {
 					body = reader.start(req.url);
-					res.writeHead(200,{
-							'Content-Length': Buffer.byteLength(body),
-							'Content-Type': 'text/'+ filetype[filetype.length-1]
-							});
+					resData['Content-Langth'] = Buffer.byteLength(body);
+					console.log(res + ":" + filetype[filetypeLength-1]);
+					res.writeHead(200,resData);
 				} catch (e){
 					console.log(e);
 					body = "Not Found";
 					res.writeHead(404,{
 							'Content-Length': Buffer.byteLength(body),
-							'Content-Type': 'text/'+ filetype[filetype.length-1]
+							'Content-Type': 'text/plain'
 							});
 				}		
 			res.end(body);
