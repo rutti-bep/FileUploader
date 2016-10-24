@@ -13,14 +13,15 @@ var fileRegExps = {
 	 };
 
 var server = http.createServer(function(req,res,err){
-		console.log(req.url);
 		var slashSplitedUrl = req.url.split('/');
 		if(pathRegExp.exec(slashSplitedUrl[1])){
+			console.log(slashSplitedUrl);
 			writer.start();
 			req.on('data',function(data){
 				writer.add(data);
 			}).on('end',function(){
-				writer.end(slashSplitedUrl[3]);
+				var filePath = slashSplitedUrl.join("/");
+				writer.end(directoryname,filePath);
 				res.end();
 			});
 		}else{

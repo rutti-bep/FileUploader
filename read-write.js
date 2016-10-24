@@ -1,5 +1,6 @@
 "use strict";
-var fs = require('fs');
+var fs = require('fs-extra');
+
 
 class Writer {
 	constructor(){
@@ -14,31 +15,53 @@ class Writer {
 	}
 
 	end(filePath){
-		fs.writeFileSync(__dirname + "/data/" + filePath,this.data,'binary');	
+		var filePathList = JSON.parse(fs.readFileSync(__dirname + '/filePathList.json', 'utf8'));
+		var filePathLength = filePathList.length;
+		var isWritten = false;
+		for (var i = 0; i < filePathLength; i ++){
+				if(filePathList[i] === filePath){
+					isWritten = true;
+					console.log(filePathList[i]  + " : " + filePath);
+					console.log("match =====================================");
+					break;
+				}
+		}
+		if (!isWritten){
+		var directoryPath = filePath.split("/");
+		var filename = directoryPath.pop();
+		directoryPath =  __dirname + "/data/" + directoryPath.join("");
+
+		fs.mkdirsSync(directoryPath);
+		var jsonData = fs.readFile('filePathList.json', 'utf8');
+		fs.writeFileSync(directoryPath + filename,this.data,'binary');
+		
+		if(filePathList[0] === null){
+			filePathList[0] = filePath;
+		}else{
+			filePathList[filePathList.length] = filePath;
+		}
+		console.log(filePath);
+		fs.writeFileSync(__dirname + '/filePathList.json', JSON.stringify(filePathList));
+		}
 	}
 }
 
 class Reader {
 		constructor(){
-			this.cache = {};
+			this.systemFilePathList = JSON.parse(fs.readFileSync('systemFilePathList.json', 'utf8'));
 		}
 
 		start(filePath){
-			console.log(filePath);
-			if(this.cacheCheck(filePath)){
-				return this.cache[filePath];
-			}else{
-				var data = fs.readFileSync(__dirname + filePath);
-				this.cache[filePath] = data;
+			var filePathList = JSON.parse(fs.readFileSync(__dirname + '/filePathList.json', 'utf8'));
+			if(filePathList[filePath] || this.systemFilePathList){
+				var data;
+				try {
+					data = fs.readFileSync(__dirname + filePath);
+				}
+				catch (err) {
+					data[err] = err;	
+				}
 				return data;
-			}
-		}
-
-		cacheCheck(filePath){
-			if(this.cache[filePath]){
-				return true;
-			}else{
-				return false;
 			}
 		}
 }

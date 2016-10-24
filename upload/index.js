@@ -10,11 +10,12 @@ upload.addEventListener('click', function () {
 	}else{
 		for(var i = 0; i < fileLength;i++){
 			var file = uploadFile.files[i];
-				var request = new XMLHttpRequest();
-				request.open('POST', 'http://localhost:3000/'+ userId +'/upload/'+ file.name);
-				request.addEventListener("load",function(ev){console.log("request comp!" + file.name)});
-				request.send(file);
-			
+			console.log(file.webkitRelativePath);
+			var request = new XMLHttpRequest();
+			request.open('POST', 'http://localhost:3000/'+ userId + file.webkitRelativePath);
+			request.addEventListener("load",function(ev){console.log("comp!!");});
+			request.send(file);
+			console.log(file.webkitRelativePath);
 		}
 	}
 });
