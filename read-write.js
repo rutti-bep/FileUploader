@@ -1,69 +1,121 @@
 "use strict";
-var fs = require('fs-extra');
+var fs = require('fs');
+var fsExtra = require('fs-extra');
 
-
-class Writer {
+class Reader {
 	constructor(){
+		this.systemFilePathIndex = JSON.parse(fs.readFileSync('systemFilePathIndex.json', 'utf8'));
+		this.systemFilePathIndexLength = this.systemFilePathIndex.length;
 	}
-	
-	start(){
+
+	Read(filePath){
+		var state = this.PathIndexCheck(__dirname,filePath);
+		if(state.state){
+			var data;
+			try {
+				data = fs.readFileSync(__dirname + filePath);
+			}
+			catch (err) {
+				data[err] = err;
+			}
+			return data;
+		}
+	}
+
+	PathIndexCheck (directoryPath,filePath){
+		console.log("r/w 26 : "+ directoryPath );
+		console.log("r/w 27 : "+ filePath );
+		var splitedFilePath = filePath.split("/");
+		try {
+			console.log("r/w 28 : " + directoryPath + splitedFilePath[0] + '/pathIndex.json');
+			var filePathIndex = JSON.parse(fs.readFileSync(directoryPath + splitedFilePath[0] + '/pathIndex.json', 'utf8'));
+		}
+		catch(err){
+			var filePathIndex = [];
+			console.log( "r/w 33 : " + err);
+		}
+		var filePathIndexLength = filePathIndex.length;
+
+		if(!splitedFilePath[1]){return {state:false,count:1};}
+
+		for (var i = 0; i < filePathIndexLength ; i ++){
+			if(filePathIndex[i] === splitedFilePath[1]){
+				console.log("r/w 41 : " + splitedFilePath.length);
+				if(splitedFilePath.length > 0){
+					var reqDirectoryPath = directoryPath + splitedFilePath[0] + "/";
+					splitedFilePath.shift();
+					splitedFilePath = splitedFilePath.join("/");
+					var returnData = this.PathIndexCheck(reqDirectoryPath,splitedFilePath);
+					returnData.count++;
+					return returnData
+				}
+			}
+		}
+		for (var i = 0; i < this.systemFilePathIndexLength; i++){
+			if(this.systemFilePathIndex[i] === filePath) return {state:true,count:0};
+		}
+		return {state:false,count:1};
+	}
+}
+
+class Writer extends Reader	{
+	WriteSetUp(){
 		this.data = new Buffer('');
 	}
 
-	add(data){
+	WriteAdd(data){
 		this.data = Buffer.concat([this.data,data]);
 	}
 
-	end(filePath){
-		var filePathList = JSON.parse(fs.readFileSync(__dirname + '/filePathList.json', 'utf8'));
-		var filePathLength = filePathList.length;
-		var isWritten = false;
-		for (var i = 0; i < filePathLength; i ++){
-				if(filePathList[i] === filePath){
-					isWritten = true;
-					console.log(filePathList[i]  + " : " + filePath);
-					console.log("match =====================================");
-					break;
-				}
-		}
-		if (!isWritten){
-		var directoryPath = filePath.split("/");
-		var filename = directoryPath.pop();
-		directoryPath =  __dirname + "/data/" + directoryPath.join("");
+	WriteEnd(filePath){
+		var writeFilePath = "/data" + filePath;
 
-		fs.mkdirsSync(directoryPath);
-		var jsonData = fs.readFile('filePathList.json', 'utf8');
-		fs.writeFileSync(directoryPath + filename,this.data,'binary');
-		
-		if(filePathList[0] === null){
-			filePathList[0] = filePath;
-		}else{
-			filePathList[filePathList.length] = filePath;
+		var splitedFilePath = writeFilePath.split("/");
+		var splitedFilePathLength = splitedFilePath.length;
+		var fileName = "/" + splitedFilePath[splitedFilePathLength-1];
+
+		var directoryPath =  writeFilePath.split("/");
+		directoryPath.pop();
+		directoryPath.shift();
+		//		directoryPath = directoryPath.join("/");
+
+		var directoryPathString = directoryPath;
+		directoryPathString = directoryPath.join("/");
+		var state = this.PathIndexCheck(__dirname + "/",  "data"+filePath);
+		console.log("r/w :86 : " + state.count);
+
+		if(!state.state){
+			fsExtra.mkdirsSync(__dirname + "/" + directoryPathString);
+			console.log("r/w :88 : " + __dirname +"/"+ directoryPathString);
+
+			for(var i = state.count+1; i < splitedFilePathLength-1; i++){
+				var path = splitedFilePath;
+				path = path.slice(0,i);
+				path = path.join("/");
+				console.log( "r/w :94 : " + __dirname+ path + '/pathIndex.json');
+				try {
+					var JsonData = JSON.parse(fs.readFileSync(__dirname+ path + '/pathIndex.json', 'utf8'));
+				}
+				catch(err){
+					var JsonData = [];
+					console.log( "read-write.js:96 : " + err);
+				}
+				JsonData.push(splitedFilePath[i]);
+				fs.writeFileSync(__dirname + path + '/pathIndex.json', JSON.stringify(JsonData));
+			}
 		}
-		console.log(filePath);
-		fs.writeFileSync(__dirname + '/filePathList.json', JSON.stringify(filePathList));
+		fs.writeFileSync(__dirname +"/"+ directoryPathString + fileName	,this.data,'binary');
+		try {
+			var JsonData = JSON.parse(fs.readFileSync(__dirname +"/"+ directoryPathString + '/pathIndex.json', 'utf8'));
 		}
+		catch(err){
+			var JsonData = [];
+			console.log( "read-write.js:109 : " + err);
+		}	
+		JsonData.push( fileName );
+		fs.writeFileSync(__dirname +"/" + directoryPathString  + '/pathIndex.json', JSON.stringify(JsonData));
 	}
 }
 
-class Reader {
-		constructor(){
-			this.systemFilePathList = JSON.parse(fs.readFileSync('systemFilePathList.json', 'utf8'));
-		}
-
-		start(filePath){
-			var filePathList = JSON.parse(fs.readFileSync(__dirname + '/filePathList.json', 'utf8'));
-			if(filePathList[filePath] || this.systemFilePathList){
-				var data;
-				try {
-					data = fs.readFileSync(__dirname + filePath);
-				}
-				catch (err) {
-					data[err] = err;	
-				}
-				return data;
-			}
-		}
-}
 
 module.exports = { Writer : Writer , Reader : Reader};

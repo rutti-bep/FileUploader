@@ -15,13 +15,13 @@ var fileRegExps = {
 var server = http.createServer(function(req,res,err){
 		var slashSplitedUrl = req.url.split('/');
 		if(pathRegExp.exec(slashSplitedUrl[1])){
-			console.log(slashSplitedUrl);
-			writer.start();
+			console.log("service.js:18 : " +  slashSplitedUrl );
+			writer.WriteSetUp();
 			req.on('data',function(data){
-				writer.add(data);
+				writer.WriteAdd(data);
 			}).on('end',function(){
 				var filePath = slashSplitedUrl.join("/");
-				writer.end(directoryname,filePath);
+				writer.WriteEnd(filePath);
 				res.end();
 			});
 		}else{
@@ -36,9 +36,9 @@ var server = http.createServer(function(req,res,err){
 					}
 				}
 				try {
-					body = reader.start(req.url);
+					body = reader.Read(req.url);
 					resData['Content-Langth'] = Buffer.byteLength(body);
-					console.log(res + ":" + filetype[filetypeLength-1]);
+					console.log("service.js:41 : " +  res + ":" + filetype[filetypeLength-1]);
 					res.writeHead(200,resData);
 				} catch (e){
 					console.log(e);

@@ -12,7 +12,7 @@ upload.addEventListener('click', function () {
 			var file = uploadFile.files[i];
 			console.log(file.webkitRelativePath);
 			var request = new XMLHttpRequest();
-			request.open('POST', 'http://localhost:3000/'+ userId + file.webkitRelativePath);
+			request.open('POST', 'http://localhost:3000/'+ userId + "/" +file.webkitRelativePath);
 			request.addEventListener("load",function(ev){console.log("comp!!");});
 			request.send(file);
 			console.log(file.webkitRelativePath);
