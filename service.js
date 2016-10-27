@@ -1,8 +1,6 @@
 "use strict";
 var http = require('http');
 var rw = require('./read-write');
-var writer = new rw.Writer();
-var reader = new rw.Reader();
 var pathRegExp = /^(\d)*$/;
 var fileRegExps = { 
 	"text/javascript" : /(js)$/,
@@ -13,6 +11,8 @@ var fileRegExps = {
 	 };
 
 var server = http.createServer(function(req,res,err){
+		var writer = new rw.Writer();
+		var reader = new rw.Reader();
 		var slashSplitedUrl = req.url.split('/');
 		if(pathRegExp.exec(slashSplitedUrl[1])){
 			console.log("service.js:18 : " +  slashSplitedUrl );

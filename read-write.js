@@ -9,6 +9,12 @@ class Reader {
 	}
 
 	Read(filePath){
+		var pathSplit = filePath.split("/");
+		console.log(filePath);
+		if(pathSplit[1] === "preview" && pathSplit[2] === "data"){
+				pathSplit.splice(1,1);
+				filePath = pathSplit.join("/");
+		}
 		var state = this.PathIndexCheck(__dirname,filePath);
 		console.log(state.state);
 		if(state.state){
@@ -26,7 +32,20 @@ class Reader {
 	PathIndexCheck (directoryPath,filePath){
 		console.log("r/w 26 : "+ directoryPath );
 		console.log("r/w 27 : "+ filePath );
+		for (var i = 0; i < this.systemFilePathIndexLength; i++){
+			if(this.systemFilePathIndex[i] === filePath) {
+				console.log("systemFile" + this.systemFilePathIndex[i] + " : "+  filePath);
+				return {state:true,count:0};
+			}
+		}
+		
 		var splitedFilePath = filePath.split("/");
+
+		if(splitedFilePath[1] === "preview"){
+			splitedFilePath.splice(1,1);
+			console.log(splitedFilePath);
+		}
+
 		try {
 			var filePathIndex = JSON.parse(fs.readFileSync(directoryPath +  '/pathIndex.json', 'utf8'));
 			console.log("r/w 32 : " + filePathIndex);
@@ -38,12 +57,6 @@ class Reader {
 		}
 		var filePathIndexLength = filePathIndex.length;
 
-		for (var i = 0; i < this.systemFilePathIndexLength; i++){
-			if(this.systemFilePathIndex[i] === filePath) {
-				console.log("systemFile");
-				return {state:true,count:0};
-			}
-		}
 
 		if(splitedFilePath.length === 0){return {state:false,count:1};}
 
@@ -98,7 +111,7 @@ class Writer extends Reader	{
 			fsExtra.mkdirsSync(__dirname + "/" + directoryPathString);
 			console.log("r/w :88 : " + __dirname +"/"+ directoryPathString);
 
-			for(var i = state.count; i < splitedFilePathLength; i++){
+			for(var i = state.count; i < splitedFilePathLength-1; i++){
 				var path = splitedFilePath;
 				path = path.slice(0,i);
 				path = path.join("/");
@@ -116,7 +129,7 @@ class Writer extends Reader	{
 		}
 		var state = this.PathIndexCheck(__dirname +"/"+ directoryPathString ,fileName);
 		if(!state.state){
-			fs.writeFileSync(__dirname +"/"+ directoryPathString + fileName	,this.data,'binary');
+			fs.writeFileSync(__dirname +"/"+ directoryPathString + fileName	,this.data);
 			try {
 				var JsonData = JSON.parse(fs.readFileSync(__dirname +"/"+ directoryPathString + '/pathIndex.json', 'utf8'));
 			}

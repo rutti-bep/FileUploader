@@ -1,7 +1,18 @@
 [
+	"/pathIndex.json",
 	"/upload/index.html",
 	"/upload/index.js",
 	"/preview/index.html",
 	"/preview/index.js",
-	"/pathIndex.json"
+	"/preview/select.js",
+	"/preview/threejs/three.min.js",
+	"/preview/threejs/charsetencoder.min.js",
+	"/preview/threejs/ammo.js",
+	"/preview/threejs/TGALoader.js",
+	"/preview/threejs/MMDLoader.js",
+	"/preview/threejs/CCDIKSolver.js",
+	"/preview/threejs/MMDPhysics.js",
+	"/preview/threejs/Detector.js",
+	"/preview/threejs/stats.min.js",
+	"/preview/threejs/OrbitControls.js"
 ]
