@@ -2,5 +2,6 @@
 	"/upload/index.html",
 	"/upload/index.js",
 	"/preview/index.html",
-	"/preview/index.js"
+	"/preview/index.js",
+	"/pathIndex.json"
 ]
