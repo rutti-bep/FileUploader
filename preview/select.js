@@ -41,6 +41,7 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 	 return function(){
 		var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 		 vmdFiles = ["data" + pathArray.join("") + path];
+		 stockVmdFiles = ["data" + pathArray.join("") + path];
 		 console.log("vmdSet : " + "data" + pathArray.join("") + path);	
 	 }
  }
@@ -56,17 +57,17 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 			 for(var i = 0; i < response.length; i ++){
 			 if(pmdRegExp.exec(response[i])){
 			 var button = document.createElement( "BUTTON" );
-			 button.textContent = response[i];
+			 button.textContent = decodeURIComponent(response[i]);
 			 button.addEventListener("click",pmdSet(response[i]),false);
 			 div.appendChild( button );
 			 }else if(vmdRegExp.exec(response[i])){
 			 var button = document.createElement( "BUTTON" );
-			 button.textContent = response[i];
+			 button.textContent = decodeURIComponent(response[i]);
 			 button.addEventListener("click",vmdSet(response[i]),false);
 			 div.appendChild( button );
 			 }else{
 			 var button = document.createElement( "BUTTON" );
-			 button.textContent = response[i];
+			 button.textContent = decodeURIComponent(response[i]);
 			 button.addEventListener("click",onClick(response[i],dirctoryArray.length),false);
 			 div.appendChild( button );
 			 }
