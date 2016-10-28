@@ -1,3 +1,7 @@
+body{
+	margin : 0px;
+}
+
 #buttons .odd  button {
 	background-color: #22cc00;
 }
@@ -8,7 +12,7 @@
 
 #buttons div button{
 	border: 0px;
-	width: 25%;
+	width: 33%;
 	height: 30px;
 	font-size : 10px;
 }
@@ -16,7 +20,7 @@
 #run button{
 	border: 0px;
 	background-color: #ff4242;
-	width: 40%;
+	width: 20%;
 	height: 30px;
 	font-size : 10px;
 }

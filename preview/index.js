@@ -19,6 +19,7 @@ function init() {
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
 	clock = new THREE.Clock();
+	stockVmdFiles = vmdFiles.concat();
 	// シーンの作成
 	scene = new THREE.Scene();
 	if(isDebug){
@@ -67,9 +68,6 @@ function init() {
 	var onError = function (xhr) {
 		alert('読み込みに失敗しました。');
 	};
-			
-	vmdFiles = stockVmdFiles;
-	console.log(stockVmdFiles,vmdFiles);
 
 	// モデルとモーションの読み込み
 	var loader = new THREE.MMDLoader();
@@ -86,6 +84,8 @@ function init() {
 			helper.unifyAnimationDuration({
 afterglow: 2.0
 });
+			
+			vmdFiles = stockVmdFiles.concat();
 			scene.add(mesh);
 			}, onProgress, onError);
 }

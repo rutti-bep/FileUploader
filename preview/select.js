@@ -40,8 +40,8 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
  function vmdSet(path){
 	 return function(){
 		var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
-		 vmdFiles = ["data" + pathArray.join("") + path];
 		 stockVmdFiles = ["data" + pathArray.join("") + path];
+		 vmdFiles = ["data" + pathArray.join("") + path];
 		 alert("vmdSet : " + "data" + decodeURIComponent(pathArray.join("") + path));	
 	 }
  }
