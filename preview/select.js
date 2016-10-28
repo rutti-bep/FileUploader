@@ -33,7 +33,7 @@
  return function(){
 var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
  modelFile = "data" +  pathArray.join("") + path;
- console.log("pmdSet : " + "data" + pathArray.join("") + path);	
+ alert("pmdSet : " + "data" + pathArray.join("") + path);	
  }
  }
 
@@ -42,7 +42,7 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 		var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 		 vmdFiles = ["data" + pathArray.join("") + path];
 		 stockVmdFiles = ["data" + pathArray.join("") + path];
-		 console.log("vmdSet : " + "data" + pathArray.join("") + path);	
+		 alert("vmdSet : " + "data" + pathArray.join("") + path);	
 	 }
  }
 
@@ -54,6 +54,7 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 			 var response = JSON.parse(ev.srcElement.response);
 			 var div = document.createElement( "div" );
 			 div.id = dirctoryArray.length - 1;
+			 div.className  = dirctoryArray.length % 2 === 0 ? "even" : "odd" ;
 			 for(var i = 0; i < response.length; i ++){
 			 if(pmdRegExp.exec(response[i])){
 			 var button = document.createElement( "BUTTON" );

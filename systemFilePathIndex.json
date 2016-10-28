@@ -5,6 +5,7 @@
 	"/preview/index.html",
 	"/preview/index.js",
 	"/preview/select.js",
+	"/preview/style.css",
 	"/preview/threejs/three.min.js",
 	"/preview/threejs/charsetencoder.min.js",
 	"/preview/threejs/ammo.js",

@@ -1,0 +1,22 @@
+#buttons .odd  button {
+	background-color: #22cc00;
+}
+
+#buttons .even button {
+	background-color: #9e9e9e;
+}
+
+#buttons div button{
+	border: 0px;
+	width: 25%;
+	height: 30px;
+	font-size : 10px;
+}
+
+#run button{
+	border: 0px;
+	background-color: #ff4242;
+	width: 40%;
+	height: 30px;
+	font-size : 10px;
+}

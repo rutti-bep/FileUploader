@@ -6,6 +6,7 @@ var fileRegExps = {
 	"text/javascript" : /(js)$/,
 	"text/html" : /(html)$/,
 	'text/plain' : /((vmd)|(spa)|(sph))$/,
+	'text/css' : /(css)$/,
 	'image/bmp' : /(bmp)$/,
 	'image/png' : /(png)$/
 	 };
