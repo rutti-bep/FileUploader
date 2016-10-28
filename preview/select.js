@@ -1,6 +1,6 @@
 (window.onload = function(){
  var dirctoryArray = ["/pathIndex.json"];
- var dotRegExp = /\./;
+ var dotRegExp = /(\.\D)/;
  var pmdRegExp = /((\.pmd)|(\.pmx))$/;
  var vmdRegExp = /(\.vmd)$/;
  request("data" + dirctoryArray.join(""));
@@ -33,7 +33,7 @@
  return function(){
 var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
  modelFile = "data" +  pathArray.join("") + path;
- alert("pmdSet : " + "data" + pathArray.join("") + path);	
+ alert("pmdSet : " + "data" + decodeURIComponent(pathArray.join("") + path));	
  }
  }
 
@@ -42,7 +42,7 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 		var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 		 vmdFiles = ["data" + pathArray.join("") + path];
 		 stockVmdFiles = ["data" + pathArray.join("") + path];
-		 alert("vmdSet : " + "data" + pathArray.join("") + path);	
+		 alert("vmdSet : " + "data" + decodeURIComponent(pathArray.join("") + path));	
 	 }
  }
 
@@ -56,7 +56,7 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 			 div.id = dirctoryArray.length - 1;
 			 div.className  = dirctoryArray.length % 2 === 0 ? "even" : "odd" ;
 			 for(var i = 0; i < response.length; i ++){
-			 if(pmdRegExp.exec(response[i])){
+				 if(pmdRegExp.exec(response[i])){
 			 var button = document.createElement( "BUTTON" );
 			 button.textContent = decodeURIComponent(response[i]);
 			 button.addEventListener("click",pmdSet(response[i]),false);
@@ -66,12 +66,13 @@ var pathArray = dirctoryArray.slice(0,dirctoryArray.length-1);
 			 button.textContent = decodeURIComponent(response[i]);
 			 button.addEventListener("click",vmdSet(response[i]),false);
 			 div.appendChild( button );
-			 }else{
+			 }else if(!dotRegExp.exec(response[i])){
 			 var button = document.createElement( "BUTTON" );
 			 button.textContent = decodeURIComponent(response[i]);
 			 button.addEventListener("click",onClick(response[i],dirctoryArray.length),false);
 			 div.appendChild( button );
 			 }
+			 
 			 }
 			 document.getElementById( "buttons" ).appendChild( div );
 			 console.log(response);
