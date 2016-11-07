@@ -6,6 +6,7 @@ var modelReady = false;
 var modelFile = 'models/pmd/lat_miku.pmd';
 var vmdFiles = ['models/vmd/nekomimi_lat.vmd'];		 
 var stockVmdFiles;
+var animationFlameId;
 
 var isDebug = false;
 var isWindowMake = false;
@@ -15,9 +16,13 @@ function run(){
 	render();
 }
 
+function stop(){
+	cancelAnimationFrame( animationFlameId );
+}
+
 function init() {
-	windowWidth = window.innerWidth;
-	windowHeight = window.innerHeight;
+	windowWidth = window.innerWidth*3/10;
+	windowHeight = window.innerHeight*1/2;
 	clock = new THREE.Clock();
 	stockVmdFiles = vmdFiles.concat();
 	// シーンの作成
@@ -28,17 +33,11 @@ function init() {
 		stats.domElement.style.position = 'absolute';
 		stats.domElement.style.top = '0px';
 		stats.domElement.style.zIndex = 100;
-		document.body.appendChild(stats.domElement);
+		document.getElementById( "run" ).appendChild(stats.domElement);
 	}
 	// 光の作成
 	var ambient = new THREE.AmbientLight(0xeeeeee);
 	scene.add(ambient);
-	var light1 = new THREE.DirectionalLight(0x888888, 0.3);
-	light1.position.set(-50, 15, 30);
-	scene.add(light1);
-	var light2 = new THREE.DirectionalLight(0x888888, 0.3);
-	light2.position.set(50, 15, 30);
-	scene.add(light2);
 
 	// 画面表示の設定
 	renderer = new THREE.WebGLRenderer();
@@ -51,7 +50,7 @@ function init() {
 		element.parentNode.removeChild(element);   
 	}
 	isWindowMake = true;
-	document.body.appendChild(renderer.domElement);
+	document.getElementById( "run" ).appendChild(renderer.domElement);
 
 	// カメラの作成
 	camera = new THREE.PerspectiveCamera(50, windowWidth / windowHeight, 1, 1000);
@@ -94,15 +93,15 @@ afterglow: 2.0
 window.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
-	windowWidth = window.innerWidth;
-	windowHeight = window.innerHeight;
+	windowWidth = window.innerWidth*3/10;
+	windowHeight = window.innerHeight*1/2;
 	camera.aspect = windowWidth / windowHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(windowWidth, windowHeight);
 }
 
 function render() {
-	requestAnimationFrame(render);
+	animationFlameId = requestAnimationFrame(render);
 	if(modelReady) {
 		helper.animate(clock.getDelta());
 		helper.render(scene, camera);

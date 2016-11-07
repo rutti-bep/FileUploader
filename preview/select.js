@@ -9,6 +9,10 @@
  button.textContent = "run";
  button.addEventListener("click",run,false); 
  document.getElementById( "run" ).appendChild( button );    
+ button = document.createElement( "BUTTON" ); 
+ button.textContent = "stop";
+ button.addEventListener("click",stop,false); 
+ document.getElementById( "run" ).appendChild( button );    
  console.log("!!!!!");
 
  function onClick(addPath,arrayLength){

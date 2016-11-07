@@ -2,3 +2,5 @@
 /node_modules
 /preview/models
 /preview/threejs
+shard.yml 
+/example/
