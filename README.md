@@ -1,5 +1,5 @@
 # FileUploader
-# 起動方法
+## 起動方法
 	npm install
 	node service.js
 
