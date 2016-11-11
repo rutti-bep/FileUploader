@@ -1,6 +1,7 @@
 "use strict";
 var fs = require('fs');
 var fsExtra = require('fs-extra');
+var archiver = require('archiver');
 
 class Reader {
 	constructor(){
@@ -79,6 +80,21 @@ class Reader {
 
 		return {state:false,count:1};
 	}
+
+	Zip(filePath,writer){
+		 var state = this.PathIndexCheck(__dirname,filePath);
+		 if(!state.state){
+		 		var pathSplit = filePath.split(".");
+			 	pathSplit.pop();
+		 		var zipPath = pathSplit.join(".");
+				var fileName = filePath.split("/");
+				fileName = fileName[fileName.length-1] + ".zip";
+				writer.WriteEnd(__dirname + zipPath);
+				writer.CreateZip(__dirname + zipPath);
+				setTimeout(console.log("!!!"),5000);
+		 }
+		return this.Read(filePath+fileName);
+	}
 }
 
 class Writer extends Reader	{
@@ -140,6 +156,23 @@ class Writer extends Reader	{
 			JsonData.push( fileName );
 			fs.writeFileSync(__dirname +"/" + directoryPathString  + '/pathIndex.json', JSON.stringify(JsonData));
 		}
+	}
+
+	CreateZip(directoryPath){
+		var archive = archiver.create('zip', {});
+		
+		var zipName = directoryPath.split("/");
+		zipName = zipName[zipName.length-1] + ".zip"
+		var output = fs.createWriteStream(directoryPath +"/"+ zipName );
+		
+		archive.pipe(output);
+
+		archive.directory(directoryPath+"/");
+
+		//output.on("close", callback)
+
+		archive.finalize();
+		output.end();
 	}
 }
 
